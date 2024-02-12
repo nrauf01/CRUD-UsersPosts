@@ -31,7 +31,7 @@ const getPosts = async (req, res, next) => {
     if (posts.length === 0) {
       return res
         .status(404)
-        .json({ error: "error", message: "No posts are available" });
+        .json({ error: "Not Found", message: "No posts are available" });
     } else {
       return res.send(posts);
     }
