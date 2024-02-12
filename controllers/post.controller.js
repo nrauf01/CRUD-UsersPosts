@@ -29,7 +29,9 @@ const getPosts = async (req, res, next) => {
     const posts = await Post.find({ author: req.authorId });
 
     if (posts.length === 0) {
-      return res.status(400).json({ Message: "No posts are available" });
+      return res
+        .status(404)
+        .json({ error: "error", message: "No posts are available" });
     } else {
       return res.send(posts);
     }
