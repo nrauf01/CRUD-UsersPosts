@@ -27,7 +27,12 @@ const getPosts = async (req, res, next) => {
   try {
     console.log(req.authorId);
     const posts = await Post.find({ author: req.authorId });
-    res.send(posts);
+
+    if (posts.length === 0) {
+      return res.status(400).json({ Message: "No posts are available" });
+    } else {
+      return res.send(posts);
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({ Error: "error", Message: "Internal Server Error" });
