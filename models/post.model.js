@@ -30,12 +30,19 @@ const PostModel = new mongoose.Schema({
       ref: "Author",
     },
   ],
+  Comment: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "comment",
+    },
+  ],
 
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Author",
     required: true,
   },
+ 
 });
 
 module.exports = new mongoose.model("post", PostModel);

@@ -14,6 +14,7 @@ const {
 
 router.post("/register", createAuthor);
 router.get("/", getAll);
+router.post("/signin", singIn);
 
 router.use((req, res, next) => {
   if (req?.headers?.authorization) {
@@ -37,8 +38,6 @@ router.use((req, res, next) => {
       .status(401)
       .json({ error: "Missing Token", message: "No Token Found" });
 });
-
-router.post("/signin", singIn);
 
 router.delete("/", deleteAuthor);
 

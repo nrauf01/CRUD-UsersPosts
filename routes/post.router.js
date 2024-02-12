@@ -4,6 +4,7 @@ const {
   like,
   getPosts,
   getAll,
+  postComment,
 } = require("../controllers/post.controller");
 
 const jwt = require("jsonwebtoken");
@@ -38,5 +39,7 @@ router.get("/", getAll);
 router.post("/create", createPost);
 
 router.post("/like/:postId/:userId", like);
+
+router.post("/comment/:id", postComment);
 
 module.exports = router;

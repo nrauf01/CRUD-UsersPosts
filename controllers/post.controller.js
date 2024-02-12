@@ -1,5 +1,7 @@
 const Post = require("../models/post.model");
 const author = require("../models/author.model");
+const comment = require("../models/comment.model");
+const { post } = require("../routes/author.router");
 
 const createPost = async (req, res, next) => {
   try {
@@ -14,9 +16,38 @@ const createPost = async (req, res, next) => {
   }
 };
 
+const postComment = async (req, res, next) => {
+  try {
+    const Id = req.params.id;
+    console.log(Id);
+    const comments = await new comment({
+      ...req.body,
+      postId: Id,
+    });
+
+    await comments.save();
+    const post = await Post.findByIdAndUpdate(
+      Id,
+      {
+        $addToSet: { Comment: comments._id },
+      },
+      { returnOriginal: false }
+    );
+    console.log(post);
+
+    return res.status(201).json(comments);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ Error: "server error" });
+  }
+};
+
 const getAll = async (req, res) => {
   try {
-    const posts = await Post.find({});
+    const posts = await Post.find({}).populate({
+      path: "author",
+      select: "name email",
+    });
     res.send(posts);
   } catch (error) {
     res.status(500).json({ error: "error" });
@@ -40,6 +71,7 @@ const getPosts = async (req, res, next) => {
     res.status(500).json({ Error: "error", Message: "Internal Server Error" });
   }
 };
+
 const like = async (req, res, next) => {
   try {
     const postId = req.params.postId;
@@ -75,4 +107,4 @@ const like = async (req, res, next) => {
   }
 };
 
-module.exports = { createPost, like, getAll, getPosts };
+module.exports = { createPost, like, getAll, getPosts, postComment };
