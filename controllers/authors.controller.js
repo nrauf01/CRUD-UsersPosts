@@ -5,21 +5,16 @@ const SECRET_KEY = "NOTESAPI";
 
 const createAuthor = async (req, res, next) => {
   const { name, email, password } = req.body;
-  console.log(req.body);
   if (!(name && email && password)) {
     return res
       .status(400)
-      .json({ error: "Error", Message: "Fill All input fields" });
+      .json({ error: "Error", Message: "Fill All Input Fields" });
   } else {
     try {
       const newUser = new Author({ ...req.body });
       await newUser.save();
-
       return res.status(201).json(newUser);
     } catch (error) {
-      // Object.entries(error.keyValue).map(([key, value]) => {
-      //   console.log(`${key} => ${value}`);
-      // });
       if (error.message.includes("duplicate")) {
         return res.status(409).json({
           error: `duplicate key ${Object.keys(error.keyValue)[0]}`,
@@ -34,7 +29,7 @@ const createAuthor = async (req, res, next) => {
 const getAll = async (req, res) => {
   try {
     const users = await Author.find({}, "name email");
-    res.send(users);
+    return res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: "error" });
   }
@@ -43,14 +38,13 @@ const getAll = async (req, res) => {
 const updateOne = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const user = await Author.findOneAndUpdate(
-      { _id: id },
+    const user = await Author.findByIdAndUpdate(
+      id,
       {
         ...req.body,
       },
       { returnOriginal: false }
     );
-
     if (!user) {
       return res
         .status(404)
@@ -60,23 +54,21 @@ const updateOne = async (req, res, next) => {
     }
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "server error" });
+    return res.status(500).json({ error: "Internal Server  Error" });
   }
 };
 
 const deleteAuthor = async (req, res, next) => {
-  console.log(req.authorId);
   await Author.findByIdAndDelete(req.authorId);
-
   try {
-    return res.status(200).json({ Message: "user deleted Successfully" });
+    return res.status(200).json({ Message: "User Deleted Successfully" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ Error: "Internal Server Error" });
   }
 };
+
 const getSingle = async (req, res, next) => {
-  console.log(req.authorId);
   const user = await Author.findById(req.authorId);
   try {
     return res
@@ -88,20 +80,26 @@ const getSingle = async (req, res, next) => {
   }
 };
 
-const singIn = async (req, res, callback) => {
+const singIn = async (req, res) => {
   const { email, password } = req.body;
+  if (!(email && password)) {
+    return res.status(400).json({ error: "Error", message: "Fill All Fields" });
+  }
   try {
     const check = await Author.findOne({ email });
-
-    if (check == null) {
-      return res.status(400).json({ error: "user does not exist" });
+    if (!check) {
+      return res
+        .status(404)
+        .json({ error: "Not Found", message: "User Not Found" });
     }
     if (check.password === password) {
       const token = jwt.sign({ id: check._id }, SECRET_KEY, {
         expiresIn: "2h",
       });
 
-      return res.status(200).json({ token });
+      return res
+        .status(200)
+        .json({ token, user: { name: user.name, email: user.email } });
     } else {
       return res
         .status(400)

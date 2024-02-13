@@ -20,8 +20,8 @@ const createPost = async (req, res, next) => {
 const updatePost = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const post = await Post.findOneAndUpdate(
-      { _id: id },
+    const post = await Post.findByIdAndUpdate(
+      id,
       {
         ...req.body,
       },
@@ -31,13 +31,13 @@ const updatePost = async (req, res, next) => {
     if (!post) {
       return res
         .status(404)
-        .json({ error: "Error", message: "post not found" });
+        .json({ error: "Not Found", message: "Post Not Found" });
     } else {
       return res.status(200).json(post);
     }
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "server error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -76,7 +76,7 @@ const postComment = async (req, res, next) => {
       await Post.findByIdAndUpdate(
         Id,
         {
-          $addToSet: { Comment: comments },
+          $addToSet: { comment: comments },
         },
         { returnOriginal: false }
       );
@@ -98,10 +98,10 @@ const deleteComment = async (req, res, next) => {
     if (!comment_) {
       return res
         .status(404)
-        .json({ error: "Not Found", message: "No Comment Found" });
+        .json({ error: "Not Found", message: "No comment Found" });
     }
     await Post.findByIdAndUpdate(comment_.postId, {
-      $pull: { Comment: new Types.ObjectId(id) },
+      $pull: { comment: new Types.ObjectId(id) },
     });
 
     return res.status(204).send();
@@ -124,7 +124,7 @@ const getAll = async (req, res) => {
         select: "name email",
       })
       .populate({
-        path: "Comment",
+        path: "comment",
         select: "comment createdAt",
       });
     if (posts.length === 0) {
@@ -142,7 +142,7 @@ const getAll = async (req, res) => {
 const getSingle = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const singlePost = await Post.findById(id).populate("Comment", "comment");
+    const singlePost = await Post.findById(id).populate("comment", "comment");
     if (singlePost === null) {
       return res.status(400).json({ message: "post not found" });
     } else {
@@ -157,7 +157,6 @@ const getSingle = async (req, res, next) => {
 };
 const getPosts = async (req, res, next) => {
   try {
-    console.log(req.authorId);
     const posts = await Post.find(
       { author: req.authorId },
       "-likes -dislikes -likedBy -dislikedBy -__v"
@@ -167,7 +166,7 @@ const getPosts = async (req, res, next) => {
         select: "name email",
       })
       .populate({
-        path: "Comment",
+        path: "comment",
         select: "comment createdAt",
       });
 

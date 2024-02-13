@@ -30,7 +30,7 @@ const PostModel = new mongoose.Schema({
   //     ref: "Author",
   //   },
   // ],
-  Comment: [
+  comment: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "comment",

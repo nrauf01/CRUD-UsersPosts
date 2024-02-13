@@ -12,7 +12,7 @@ var http = require("http");
  * Get port from environment and store in Express.
  */
 
-connect("mongodb://localhost:27017/Blogs")
+connect("mongodb://127.0.0.1:27017/Blogs")
   .then(() => console.log("mongodb connected successfully"))
   .catch((err) => console.log("mongodb error"));
 
