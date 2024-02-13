@@ -5,6 +5,10 @@ const {
   getPosts,
   getAll,
   postComment,
+  updatePost,
+  deletePost,
+  deleteComment,
+  getSingle,
 } = require("../controllers/post.controller");
 
 const jwt = require("jsonwebtoken");
@@ -32,14 +36,22 @@ router.use((req, res, next) => {
       .json({ error: "Missing Token", message: "No Token Found" });
 });
 
+router.put("/:id", updatePost);
+
 router.get("/relevant", getPosts);
 
 router.get("/", getAll);
+
+router.get("/:id", getSingle);
 
 router.post("/create", createPost);
 
 router.post("/like/:postId/:userId", like);
 
 router.post("/comment/:id", postComment);
+
+router.delete("/:id", deletePost);
+
+router.delete("/delComment/:id", deleteComment);
 
 module.exports = router;

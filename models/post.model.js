@@ -9,27 +9,27 @@ const PostModel = new mongoose.Schema({
     type: String,
     required: true,
   },
-  likes: {
-    type: Number,
-    default: 0,
-  },
-  dislikes: {
-    type: Number,
-    default: 0,
-  },
-  likedBy: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Author",
-    },
-  ],
+  // likes: {
+  //   type: Number,
+  //   default: 0,
+  // },
+  // dislikes: {
+  //   type: Number,
+  //   default: 0,
+  // },
+  // likedBy: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "Author",
+  //   },
+  // ],
 
-  dislikedBy: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Author",
-    },
-  ],
+  // dislikedBy: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "Author",
+  //   },
+  // ],
   Comment: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -42,7 +42,6 @@ const PostModel = new mongoose.Schema({
     ref: "Author",
     required: true,
   },
- 
 });
 
 module.exports = new mongoose.model("post", PostModel);

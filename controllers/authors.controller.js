@@ -15,7 +15,7 @@ const createAuthor = async (req, res, next) => {
       const newUser = new Author({ ...req.body });
       await newUser.save();
 
-      return res.status(200).json(newUser);
+      return res.status(201).json(newUser);
     } catch (error) {
       // Object.entries(error.keyValue).map(([key, value]) => {
       //   console.log(`${key} => ${value}`);
