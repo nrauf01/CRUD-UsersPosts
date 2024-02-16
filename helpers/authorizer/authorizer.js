@@ -1,4 +1,5 @@
 const SECRET_KEY = "NOTESAPI";
+const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
   if (req?.headers?.authorization) {

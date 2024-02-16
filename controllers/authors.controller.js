@@ -1,3 +1,4 @@
+const { utilizer } = require("../helpers/utils/utils");
 const Author = require("../models/author.model");
 
 const jwt = require("jsonwebtoken");
@@ -15,13 +16,7 @@ const createAuthor = async (req, res, next) => {
       await newUser.save();
       return res.status(201).json(newUser);
     } catch (error) {
-      if (error.message.includes("duplicate")) {
-        return res.status(409).json({
-          error: `duplicate key ${Object.keys(error.keyValue)[0]}`,
-          message: `${Object.values(error.keyValue)[0]} is already in use`,
-        });
-      }
-      return res.status(500).json({ message: "Internal Server Error" });
+      return utilizer(res, error);
     }
   }
 };
@@ -31,7 +26,7 @@ const getAll = async (req, res) => {
     const users = await Author.find({}, "name email");
     return res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ error: "error" });
+    res.status(500).json({ error: "Error", message: "Internal Server Error" });
   }
 };
 
@@ -54,7 +49,9 @@ const updateOne = async (req, res, next) => {
     }
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Internal Server  Error" });
+    return res
+      .status(500)
+      .json({ error: "Error", message: "Internal Server Error" });
   }
 };
 
@@ -64,7 +61,9 @@ const deleteAuthor = async (req, res, next) => {
     return res.status(200).json({ Message: "User Deleted Successfully" });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ Error: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ error: "Error", message: "Internal Server Error" });
   }
 };
 
@@ -76,7 +75,9 @@ const getSingle = async (req, res, next) => {
       .json({ email: user.email, id: user._id, name: user.name });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ Error: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ error: "Error", message: "Internal Server Error" });
   }
 };
 
@@ -99,7 +100,7 @@ const singIn = async (req, res) => {
 
       return res
         .status(200)
-        .json({ token, user: { name: user.name, email: user.email } });
+        .json({ token, user: { name: check.name, email: check.email } });
     } else {
       return res
         .status(400)
@@ -107,7 +108,9 @@ const singIn = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "server error" });
+    return res
+      .status(500)
+      .json({ error: "Error", message: "Internal Server Error" });
   }
 };
 

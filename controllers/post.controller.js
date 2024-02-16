@@ -63,7 +63,7 @@ const postComment = async (req, res, next) => {
     if (content === null) {
       return res
         .status(400)
-        .json({ error: "error", message: " post not available" });
+        .json({ error: "Error", message: " Post Not Available" });
     } else {
       console.log(Id);
       const comments = await new comment({
@@ -86,7 +86,9 @@ const postComment = async (req, res, next) => {
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ Error: "server error" });
+    return res
+      .status(500)
+      .json({ error: "Error", message: "Internal Server Error" });
   }
 };
 
@@ -109,7 +111,7 @@ const deleteComment = async (req, res, next) => {
     console.log(error);
     return res
       .status(500)
-      .json({ error: "error", message: "internal server error" });
+      .json({ error: "Error", message: "Internal Server Error" });
   }
 };
 
@@ -130,12 +132,12 @@ const getAll = async (req, res) => {
     if (posts.length === 0) {
       return res
         .status(400)
-        .json({ error: "Error", message: "No Posts are available" });
+        .json({ error: "Error", message: "No Posts are Available" });
     } else {
       res.send(posts);
     }
   } catch (error) {
-    res.status(500).json({ error: "error" });
+    res.status(500).json({ error: "error", message: "Internal Server Error" });
   }
 };
 
@@ -152,7 +154,7 @@ const getSingle = async (req, res, next) => {
     console.log(error);
     return res
       .status(500)
-      .json({ error: "Error", message: "Internal server error" });
+      .json({ error: "Error", message: "Internal Server Error" });
   }
 };
 const getPosts = async (req, res, next) => {
